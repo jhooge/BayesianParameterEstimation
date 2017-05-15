@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\n# This is the user-interface definition of a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\n\nshinyUI(fluidPage(\n\n  # Application title\n  titlePanel(\"Bayesian Parameter Estimation\"),\n\n  # Sidebar with a slider input for number of bins\n  sidebarLayout(\n    sidebarPanel(\n      h3(\"Data Parameters\"),\n      sliderInput(\"n\",\n                  \"Number of samples:\",\n                  min = 1,\n                  max = 1000,\n                  value = 100),\n      sliderInput(\"theta\",\n                  \"Theta:\",\n                  min = 0,\n                  max = 1,\n                  value = .3),\n      h3(\"Beta Distribution Parameters\"),\n      sliderInput(\"alpha\",\n                  \"Alpha:\",\n                  min = 0,\n                  max = 1,\n                  value = .5),\n      sliderInput(\"beta\",\n                  \"Beta:\",\n                  min = 0,\n                  max = 1,\n                  value = .5)\n    ),\n\n    # Show a plot of the generated distribution\n    mainPanel(\n      plotOutput(\"distPlot\"),\n      plotOutput(\"posteriorPlot\")\n    )\n  )\n))\n",
+    "created" : 1494526383832.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "218856192",
+    "id" : "C4836384",
+    "lastKnownWriteTime" : 1494721505,
+    "last_content_update" : 1494721505279,
+    "path" : "~/workspace/R/BayesianParameterEstimation/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

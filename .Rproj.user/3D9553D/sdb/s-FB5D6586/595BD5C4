@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\nset.seed(42)\ntheta <- 0\ntheta_hat <- rnorm(1000, theta, 1)\nplot(density(theta_hat))\n\nplot(density(rnorm(1000, 0, 1) *\n             rnorm(1000, 1000, 1)))\n\n\n## Binomial Model\nn <- 1000\ntheta <- .3\na <- rep(.3, n)\nb  <- rep(.5, n)\n\nx <- rbinom(n, 1, theta) ## random variable\ny <- dbinom(n, 100, theta)\np_y_theta <- choose(n, x) * (theta**x) * (1-theta)**(n-x) ## pmf\np_theta <- ((theta**(a-1)) * (1-theta)**(b-1))/rbeta(n, a, b)\nplot(density(p_y_theta))\n\n\n\nplot(density(dbeta(y, a+y, b+n-y)))\n",
+    "created" : 1494526387049.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "4190256038",
+    "id" : "595BD5C4",
+    "lastKnownWriteTime" : 2,
+    "last_content_update" : 1494716956105,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
