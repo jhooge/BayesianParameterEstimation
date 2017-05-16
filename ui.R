@@ -19,30 +19,30 @@ shinyUI(fluidPage(
       sliderInput("n",
                   "Number of samples:",
                   min = 1,
-                  max = 1000,
+                  max = 10000,
                   value = 100),
-      sliderInput("theta",
-                  "Theta:",
+      sliderInput("prob",
+                  "Success Probability:",
                   min = 0,
                   max = 1,
-                  value = .3),
+                  value = .5),
       h3("Beta Distribution Parameters"),
       sliderInput("alpha",
                   "Alpha:",
                   min = 0,
-                  max = 1,
+                  max = 100,
                   value = .5),
       sliderInput("beta",
                   "Beta:",
                   min = 0,
-                  max = 1,
+                  max = 100,
                   value = .5)
     ),
 
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("distPlot"),
-      plotOutput("posteriorPlot")
+      plotOutput("triPlot")
+      # plotOutput("posteriorPlot")
     )
   )
 ))
