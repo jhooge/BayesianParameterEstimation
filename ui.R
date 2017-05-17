@@ -19,7 +19,7 @@ shinyUI(fluidPage(
       sliderInput("n",
                   "Number of samples:",
                   min = 1,
-                  max = 10000,
+                  max = 1000,
                   value = 100),
       sliderInput("prob",
                   "Success Probability:",
@@ -42,7 +42,6 @@ shinyUI(fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
       plotOutput("triPlot")
-      # plotOutput("posteriorPlot")
     )
   )
 ))

@@ -39,6 +39,5 @@ shinyServer(function(input, output) {
     ggplot(data.molten, aes(x=Theta, y=Density)) +
       geom_line(aes(colour=Function))
   })
-  
 
 })
