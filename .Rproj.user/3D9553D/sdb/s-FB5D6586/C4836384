@@ -1,14 +1,14 @@
 {
     "collab_server" : "",
-    "contents" : "\n# This is the user-interface definition of a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\n\nshinyUI(fluidPage(\n\n  # Application title\n  titlePanel(\"Bayesian Parameter Estimation\"),\n\n  # Sidebar with a slider input for number of bins\n  sidebarLayout(\n    sidebarPanel(\n      h3(\"Data Parameters\"),\n      sliderInput(\"n\",\n                  \"Number of samples:\",\n                  min = 1,\n                  max = 1000,\n                  value = 100),\n      sliderInput(\"prob\",\n                  \"Success Probability:\",\n                  min = 0,\n                  max = 1,\n                  value = .5),\n      h3(\"Beta Distribution Parameters\"),\n      sliderInput(\"alpha\",\n                  \"Alpha:\",\n                  min = 0,\n                  max = 100,\n                  value = .5),\n      sliderInput(\"beta\",\n                  \"Beta:\",\n                  min = 0,\n                  max = 100,\n                  value = .5)\n    ),\n\n    # Show a plot of the generated distribution\n    mainPanel(\n      plotOutput(\"triPlot\")\n    )\n  )\n))\n",
+    "contents" : "\n# This is the user-interface definition of a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\n\nshinyUI(fluidPage(\n\n  # Application title\n  titlePanel(\"Bayesian Parameter Estimation\"),\n\n  # Sidebar with a slider input for number of bins\n  sidebarLayout(\n    sidebarPanel(\n      h3(\"Data Parameters\"),\n      numericInput(\"n\", \"Number of samples:\", min = 1, max = 1000, value = 10),\n      actionButton(\"add\", \"Add\"),\n      actionButton(\"remove\", \"Remove\"),\n      actionButton(\"reset\", \"Reset\"),\n      sliderInput(\"prob\",\n                  \"Success Probability:\",\n                  min = 0,\n                  max = 1,\n                  step=.01,\n                  value = .5),\n      h3(\"Prior Parameters\"),\n      sliderInput(\"alpha\",\n                  \"Alpha:\",\n                  min = 0,\n                  max = 20,\n                  step=.05,\n                  value = 1),\n      sliderInput(\"beta\",\n                  \"Beta:\",\n                  min = 0,\n                  max = 20,\n                  step=.05,\n                  value = 1)\n    ),\n\n    # Show a plot of the generated distribution\n    mainPanel(\n      plotOutput(\"triPlot\"),\n      h2(\"Point Estimates\"),\n      fluidRow(\n        column(4, \n               h3(\"Prior\"),\n               tableOutput(\"pointEst_Prior\")),\n        column(4, \n               h3(\"Likelihood\"),\n               tableOutput(\"pointEst_Likelihood\")),\n        column(4, \n               h3(\"Posterior\"),\n               tableOutput(\"pointEst_Posterior\")))\n    )\n  )\n))\n",
     "created" : 1494526383832.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "796885690",
+    "hash" : "1120450617",
     "id" : "C4836384",
-    "lastKnownWriteTime" : 1495041497,
-    "last_content_update" : 1495041497270,
+    "lastKnownWriteTime" : 1495044965,
+    "last_content_update" : 1495044965616,
     "path" : "~/workspace/R/BayesianParameterEstimation/ui.R",
     "project_path" : "ui.R",
     "properties" : {

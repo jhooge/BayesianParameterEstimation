@@ -16,32 +16,45 @@ shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(
       h3("Data Parameters"),
-      sliderInput("n",
-                  "Number of samples:",
-                  min = 1,
-                  max = 1000,
-                  value = 100),
+      numericInput("n", "Number of samples:", min = 1, max = 1000, value = 10),
+      actionButton("add", "Add"),
+      actionButton("remove", "Remove"),
+      actionButton("reset", "Reset"),
       sliderInput("prob",
                   "Success Probability:",
                   min = 0,
                   max = 1,
+                  step=.01,
                   value = .5),
-      h3("Beta Distribution Parameters"),
+      h3("Prior Parameters"),
       sliderInput("alpha",
                   "Alpha:",
                   min = 0,
-                  max = 100,
-                  value = .5),
+                  max = 20,
+                  step=.05,
+                  value = 1),
       sliderInput("beta",
                   "Beta:",
                   min = 0,
-                  max = 100,
-                  value = .5)
+                  max = 20,
+                  step=.05,
+                  value = 1)
     ),
 
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("triPlot")
+      plotOutput("triPlot"),
+      h2("Point Estimates"),
+      fluidRow(
+        column(4, 
+               h3("Prior"),
+               tableOutput("pointEst_Prior")),
+        column(4, 
+               h3("Likelihood"),
+               tableOutput("pointEst_Likelihood")),
+        column(4, 
+               h3("Posterior"),
+               tableOutput("pointEst_Posterior")))
     )
   )
 ))
