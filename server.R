@@ -28,17 +28,93 @@ shinyServer(function(input, output) {
   observeEvent(input$add, {
     n <- sum(input$n, length(values$x))
     prob <- input$prob ## success probability
-    values$x <- rbinom(n, size = 1, prob)
+    values$x <- c(values$x, rbinom(input$n, size = 1, prob))
+    
   })
   
   observeEvent(input$remove, {
     n <- input$n
     values$x <- head(values$x, -n)
+    
   })
   
   observeEvent(input$reset, {
     values$x <- NULL
   })
+  
+  output$samplePlot <- renderPlot({
+    validate(
+      need(!(length(values$x)==0), "")
+    )
+    
+    successes <- sum(values$x)
+    fails <- length(values$x) - successes
+    
+    draws <- data.frame(Draw=as.factor(c("Successes", "Fails")),
+                        Count=c(successes, fails),
+                        Sample=c("Sample", "Sample"))
+    
+    
+    fig <- ggplot(draws, aes(x=Sample, y=Count, colour=Draw, fill=Draw)) + 
+      geom_bar(stat = "identity", width=.2) +
+      geom_text(aes(label = Count), colour="black", size = 8, hjust = .5, vjust = 4, position = "stack") +
+      theme_bw() +
+      theme(axis.line=element_blank(),
+            axis.text.x=element_blank(),
+            axis.text.y=element_blank(),
+            axis.ticks=element_blank(),
+            axis.title.x=element_blank(),
+            axis.title.y=element_blank(),
+            legend.position="left",
+            legend.title = element_blank(),
+            legend.text  = element_text(size=15),
+            panel.background=element_blank(),
+            panel.border=element_blank(),
+            panel.grid.major=element_blank(),
+            panel.grid.minor=element_blank(),
+            plot.background=element_blank())
+      
+  return(fig)
+  })
+  
+  output$priorDistFormula <- renderUI({
+    alpha <- input$alpha
+    beta <- input$beta
+    uiElement <- withMathJax(helpText(sprintf('$$\\begin{align}
+                                      p(\\theta)&=\\frac{\\theta^{\\alpha-1}(1-\\theta)^{\\beta-1}}{B(\\alpha, \\beta)}
+                                            \\\\&=Beta(\\theta|\\alpha, \\beta)
+                                            \\\\&=Beta(\\theta|\\textbf{%.2f}, \\textbf{%.2f})
+                                      \\end{align}$$', alpha, beta, alpha, beta, alpha, beta)))
+    return(uiElement)
+  })
+  
+  output$likelihoodFormula <- renderUI({
+    n <- length(values$x)
+    x <- sum(values$x)
+    alpha <- input$alpha
+    beta <- input$beta
+    uiElement <- list(withMathJax(helpText(sprintf('$$X\\sim Bin(n, \\theta) = Bin(\\textbf{%i}, \\theta)$$', n))),
+                      withMathJax(helpText(sprintf('$$\\begin{align}
+                                      p(x|\\theta)&={n\\choose{x}}\\theta^{x}(1-\\theta)^{n-x}
+                                              \\\\&={\\textbf{%i}\\choose{\\textbf{%i}}}\\theta^{\\textbf{%i}}(1-\\theta)^{\\textbf{%i}-\\textbf{%i}}
+                                      \\end{align}$$', n, x, x, n, x))))
+    return(uiElement)
+  })
+  
+  output$posteriorFormula <- renderUI({
+    n <- length(values$x)
+    x <- sum(values$x)
+    alpha <- input$alpha
+    beta <- input$beta
+    uiElement <- withMathJax(helpText(sprintf('$$\\begin{align}
+                                               p(\\theta|x)&=p(x|\\theta)p(\\theta)
+                                                       \\\\&=\\theta^{x}(1-\\theta)^{n-x}\\theta^{\\alpha-1}(1-\\theta)^{\\beta-1}
+                                                       \\\\&=\\theta^{(\\alpha+x)-1}(1-\\theta)^{(\\beta+n+x)-1}
+                                                       \\\\&=Beta(\\theta|\\alpha+x, \\beta+n-x)
+                                                       \\\\&=Beta(\\theta|\\textbf{%.2f}+\\textbf{%i}, \\textbf{%.2f}+\\textbf{%i}-\\textbf{%i})
+                                                   \\end{align}$$', alpha, x, beta, n, x)))
+    return(uiElement)
+})
   
   output$triPlot <- renderPlot({
     validate(
@@ -71,6 +147,7 @@ shinyServer(function(input, output) {
       geom_line(aes(colour=Function, linetype=Function), size=1.5) +
       geom_text(x = Inf, y = Inf, label = paste0("n=", n), hjust = 1.2, vjust = 1.2, size=10) + 
       xlab("Probability of Success") +
+      scale_y_continuous(limits = c(0, 30)) +
       scale_x_continuous(breaks = seq(0, 1.1, by=.1)) +
       theme_bw() +
       theme(plot.title   = element_text(size=15),

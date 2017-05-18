@@ -8,6 +8,7 @@
 library(shiny)
 
 shinyUI(fluidPage(
+  withMathJax(),
 
   # Application title
   titlePanel("Bayesian Parameter Estimation"),
@@ -43,7 +44,21 @@ shinyUI(fluidPage(
 
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("triPlot"),
+      fluidRow(column(2, plotOutput("samplePlot")),
+               column(10, plotOutput("triPlot"))),
+      
+      h2("Parameterization"),
+      fluidRow(
+        column(4, 
+               h3("Prior"), 
+               withMathJax(uiOutput("priorDistFormula"))),
+        column(4, 
+               h3("Likelihood"), 
+               withMathJax(uiOutput("likelihoodFormula"))),
+        column(4, 
+               h3("Posterior"), 
+               withMathJax(uiOutput("posteriorFormula")))
+      ),
       h2("Point Estimates"),
       fluidRow(
         column(4, 
