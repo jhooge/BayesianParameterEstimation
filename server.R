@@ -96,8 +96,8 @@ shinyServer(function(input, output) {
     uiElement <- list(withMathJax(helpText(sprintf('$$X\\sim Bin(n, \\theta) = Bin(\\textbf{%i}, \\theta)$$', n))),
                       withMathJax(helpText(sprintf('$$\\begin{align}
                                       p(x|\\theta)&={n\\choose{x}}\\theta^{x}(1-\\theta)^{n-x}
-                                              \\\\&={\\textbf{%i}\\choose{\\textbf{%i}}}\\theta^{\\textbf{%i}}(1-\\theta)^{\\textbf{%i}-\\textbf{%i}}
-                                      \\end{align}$$', n, x, x, n, x))))
+                                              \\\\&={\\textbf{%i}\\choose{\\textbf{%i}}}\\theta^{\\textbf{%i}}(1-\\theta)^{\\textbf{%i}}
+                                      \\end{align}$$', n, x, x, n-x))))
     return(uiElement)
   })
   
@@ -111,8 +111,8 @@ shinyServer(function(input, output) {
                                                        \\\\&=\\theta^{x}(1-\\theta)^{n-x}\\theta^{\\alpha-1}(1-\\theta)^{\\beta-1}
                                                        \\\\&=\\theta^{(\\alpha+x)-1}(1-\\theta)^{(\\beta+n+x)-1}
                                                        \\\\&=Beta(\\theta|\\alpha+x, \\beta+n-x)
-                                                       \\\\&=Beta(\\theta|\\textbf{%.2f}+\\textbf{%i}, \\textbf{%.2f}+\\textbf{%i}-\\textbf{%i})
-                                                   \\end{align}$$', alpha, x, beta, n, x)))
+                                                       \\\\&=Beta(\\theta|\\textbf{%.2f}, \\textbf{%.2f})
+                                                   \\end{align}$$', sum(alpha, x), sum(beta, n, x))))
     return(uiElement)
 })
   
@@ -125,7 +125,7 @@ shinyServer(function(input, output) {
     n <- length(values$x)
     alpha <- input$alpha
     beta <- input$beta
-    theta <- seq(0,1, length.out = n)
+    theta <- seq(0, 1, length.out = 100)
     
     ## Data
     x <- sum(values$x) ## number of successes
@@ -203,7 +203,7 @@ shinyServer(function(input, output) {
     
     x <- sum(values$x) ## number of successes
     n <- length(values$x) ## number of tries
-    alpha <- input$alpha + 1
+    alpha <- input$alpha + x
     beta <- input$beta + n - x
     
     beta_mode <- betaMode(alpha, beta)

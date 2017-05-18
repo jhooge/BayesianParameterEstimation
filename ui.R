@@ -16,60 +16,64 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins
   sidebarLayout(
     sidebarPanel(
-      h3("Data Parameters"),
-      numericInput("n", "Number of samples:", min = 1, max = 1000, value = 10),
+      h3("Likelihood Parameters"),
+      h3(withMathJax("$$X\\sim Bin(n, \\theta), with$$")),
+      fluidRow(
+        column(4,
+               numericInput("n", withMathJax("$$\\textbf{Number}\\ \\textbf{of}\\ \\textbf{samples}\\ \\textbf{n}$$"), 
+                            min = 1, max = 1000, value = 10)),
+        column(4,
+               numericInput("prob", withMathJax("$$\\textbf{Success}\\ \\textbf{Probability}\\ \\theta$$"), 
+                            min = 0, max = 1, step=.1, value = .5))),
+      h3("Prior Parameters"),
+      h3(withMathJax("$$p(\\theta)=Beta(\\theta|\\alpha, \\beta), with$$")),
+      fluidRow(
+        column(3, 
+               numericInput("alpha", withMathJax("$$\\alpha$$"), 
+                            min = 0, max = 100, step=.05, value = 1)),
+        column(3, 
+               numericInput("beta", withMathJax("$$\\beta$$"), 
+                            min = 0, max = 100, step=.05, value = 1))
+        ),
+      h3("Sampling"),
       actionButton("add", "Add"),
       actionButton("remove", "Remove"),
-      actionButton("reset", "Reset"),
-      sliderInput("prob",
-                  "Success Probability:",
-                  min = 0,
-                  max = 1,
-                  step=.01,
-                  value = .5),
-      h3("Prior Parameters"),
-      sliderInput("alpha",
-                  "Alpha:",
-                  min = 0,
-                  max = 20,
-                  step=.05,
-                  value = 1),
-      sliderInput("beta",
-                  "Beta:",
-                  min = 0,
-                  max = 20,
-                  step=.05,
-                  value = 1)
+      actionButton("reset", "Reset")
     ),
 
     # Show a plot of the generated distribution
     mainPanel(
-      fluidRow(column(2, plotOutput("samplePlot")),
-               column(10, plotOutput("triPlot"))),
-      
-      h2("Parameterization"),
-      fluidRow(
-        column(4, 
-               h3("Prior"), 
-               withMathJax(uiOutput("priorDistFormula"))),
-        column(4, 
-               h3("Likelihood"), 
-               withMathJax(uiOutput("likelihoodFormula"))),
-        column(4, 
-               h3("Posterior"), 
-               withMathJax(uiOutput("posteriorFormula")))
+      fluidRow(column(2, 
+                      plotOutput("samplePlot")),
+               column(10, 
+                      plotOutput("triPlot"))),
+      h2("Parametrization"),
+      wellPanel(
+        fluidRow(
+            column(4, 
+                   h3("Prior"), 
+                   withMathJax(uiOutput("priorDistFormula"))),
+            column(4, 
+                   h3("Likelihood"), 
+                   withMathJax(uiOutput("likelihoodFormula"))),
+            column(4, 
+                   h3("Posterior"), 
+                   withMathJax(uiOutput("posteriorFormula")))
+        )
       ),
       h2("Point Estimates"),
-      fluidRow(
-        column(4, 
-               h3("Prior"),
-               tableOutput("pointEst_Prior")),
-        column(4, 
-               h3("Likelihood"),
-               tableOutput("pointEst_Likelihood")),
-        column(4, 
-               h3("Posterior"),
-               tableOutput("pointEst_Posterior")))
+      wellPanel(
+        fluidRow(
+            column(4, 
+                   h3("Prior"),
+                   tableOutput("pointEst_Prior")),
+            column(4, 
+                   h3("Likelihood"),
+                   tableOutput("pointEst_Likelihood")),
+            column(4, 
+                   h3("Posterior"),
+                   tableOutput("pointEst_Posterior")))
+      )
     )
   )
 ))
