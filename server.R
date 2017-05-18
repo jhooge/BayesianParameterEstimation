@@ -58,6 +58,7 @@ shinyServer(function(input, output) {
     ggplot(data.molten, aes(x=Theta, y=Density)) +
       geom_line(aes(colour=Function, linetype=Function), size=2) +
       xlab("Probability of Success") +
+      scale_y_continuous(limits = c(0, 30)) +
       scale_x_continuous(breaks = seq(0, 1.1, by=.1)) +
       theme_bw() +
       theme(plot.title   = element_text(size=15),
