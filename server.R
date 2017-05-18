@@ -42,40 +42,6 @@ shinyServer(function(input, output) {
     values$x <- NULL
   })
   
-  output$samplePlot <- renderPlot({
-    validate(
-      need(!(length(values$x)==0), "")
-    )
-    
-    successes <- sum(values$x)
-    fails <- length(values$x) - successes
-    
-    draws <- data.frame(Draw=as.factor(c("Successes", "Fails")),
-                        Count=c(successes, fails),
-                        Sample=c("Sample", "Sample"))
-    
-    
-    fig <- ggplot(draws, aes(x=Sample, y=Count, colour=Draw, fill=Draw)) + 
-      geom_bar(stat = "identity", width=.2) +
-      geom_text(aes(label = Count), colour="black", size = 8, hjust = .5, vjust = 4, position = "stack") +
-      theme_bw() +
-      theme(axis.line=element_blank(),
-            axis.text.x=element_blank(),
-            axis.text.y=element_blank(),
-            axis.ticks=element_blank(),
-            axis.title.x=element_blank(),
-            axis.title.y=element_blank(),
-            legend.position="left",
-            legend.title = element_blank(),
-            legend.text  = element_text(size=15),
-            panel.background=element_blank(),
-            panel.border=element_blank(),
-            panel.grid.major=element_blank(),
-            panel.grid.minor=element_blank(),
-            plot.background=element_blank())
-      
-  return(fig)
-  })
   
   output$priorDistFormula <- renderUI({
     alpha <- input$alpha
@@ -116,6 +82,42 @@ shinyServer(function(input, output) {
     return(uiElement)
 })
   
+  
+  output$samplePlot <- renderPlot({
+    validate(
+      need(!(length(values$x)==0), "")
+    )
+    
+    successes <- sum(values$x)
+    fails <- length(values$x) - successes
+    
+    draws <- data.frame(Draw=as.factor(c("Successes", "Fails")),
+                        Count=c(successes, fails),
+                        Sample=c("Sample", "Sample"))
+    
+    
+    fig <- ggplot(draws, aes(x=Sample, y=Count, colour=Draw, fill=Draw)) + 
+      geom_bar(stat = "identity", width=.2) +
+      geom_text(aes(label = Count), colour="black", size = 8, hjust = .5, vjust = 4, position = "stack") +
+      theme_bw() +
+      theme(axis.line=element_blank(),
+            axis.text.x=element_blank(),
+            axis.text.y=element_blank(),
+            axis.ticks=element_blank(),
+            axis.title.x=element_blank(),
+            axis.title.y=element_blank(),
+            legend.position="left",
+            legend.title = element_blank(),
+            legend.text  = element_text(size=15),
+            panel.background=element_blank(),
+            panel.border=element_blank(),
+            panel.grid.major=element_blank(),
+            panel.grid.minor=element_blank(),
+            plot.background=element_blank())
+    
+    return(fig)
+  })
+  
   output$triPlot <- renderPlot({
     validate(
       need(!(length(values$x)==0), "Please start drawing samples using the 'Add' button!")
@@ -146,7 +148,7 @@ shinyServer(function(input, output) {
     ggplot(data.molten, aes(x=Theta, y=Density)) +
       geom_line(aes(colour=Function, linetype=Function), size=1.5) +
       geom_text(x = Inf, y = Inf, label = paste0("n=", n), hjust = 1.2, vjust = 1.2, size=10) + 
-      xlab("Probability of Success") +
+      xlab(expression(theta)) +
       scale_y_continuous(limits = c(0, 30)) +
       scale_x_continuous(breaks = seq(0, 1.1, by=.1)) +
       theme_bw() +
@@ -216,4 +218,3 @@ shinyServer(function(input, output) {
     
   })
 })
-
