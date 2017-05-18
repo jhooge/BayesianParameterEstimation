@@ -23,24 +23,37 @@ betaStd <- function(alpha, beta) {
 
 shinyServer(function(input, output) {
   
-  x <- reactive({
-    ## Number of successes
-    n <- input$n
+  values <- reactiveValues(x=NULL)
+  
+  observeEvent(input$add, {
+    n <- sum(input$n, length(values$x))
     prob <- input$prob ## success probability
-    data <- sum(rbinom(n, size = 1, prob))
-    return(data)
+    values$x <- rbinom(n, size = 1, prob)
   })
-
+  
+  observeEvent(input$remove, {
+    n <- input$n
+    values$x <- head(values$x, -n)
+  })
+  
+  observeEvent(input$reset, {
+    values$x <- NULL
+  })
+  
   output$triPlot <- renderPlot({
     
+    validate(
+      need(!(length(values$x)==0), "Please start drawing samples using the 'Add' button!")
+    )
+    
     # generate bins based on input$bins from ui.R
-    n <- input$n
+    n <- length(values$x)
     alpha <- input$alpha
     beta <- input$beta
     theta <- seq(0,1, length.out = n)
     
     ## Data
-    x <- x() ## number of successes
+    x <- sum(values$x) ## number of successes
     
     ## Likelihood p(x|theta) with x ~ Bin(theta, alpha, beta)
     likelihood <- dbinom(x, n, theta)
@@ -56,7 +69,8 @@ shinyServer(function(input, output) {
     colnames(data.molten) <- c("Theta", "Function", "Density")
     
     ggplot(data.molten, aes(x=Theta, y=Density)) +
-      geom_line(aes(colour=Function, linetype=Function), size=2) +
+      geom_line(aes(colour=Function, linetype=Function), size=1.5) +
+      geom_text(x = Inf, y = Inf, label = paste0("n=", n), hjust = 1.2, vjust = 1.2, size=10) + 
       xlab("Probability of Success") +
       scale_y_continuous(limits = c(0, 30)) +
       scale_x_continuous(breaks = seq(0, 1.1, by=.1)) +
@@ -84,8 +98,8 @@ shinyServer(function(input, output) {
   })
   
   output$pointEst_Likelihood <- renderTable({
-    x <- x() ## number of successes
-    n <- input$n ## number of tries
+    x <- sum(values$x) ## number of successes
+    n <- length(values$x) ## number of tries
     alpha <- x + 1
     beta <- n - x + 1
     
@@ -99,8 +113,8 @@ shinyServer(function(input, output) {
   })
   
   output$pointEst_Posterior <- renderTable({
-    x <- x() ## number of successes
-    n <- input$n ## number of tries
+    x <- sum(values$x) ## number of successes
+    n <- length(values$x) ## number of tries
     alpha <- input$alpha + 1
     beta <- input$beta + n - x
     

@@ -3,8 +3,8 @@ title: BayesianParameterEstimation
 account: jhooge
 server: shinyapps.io
 appId: 181074
-bundleId: 830701
+bundleId: 831270
 url: https://jhooge.shinyapps.io/BayesianParameterEstimation/
-when: 1495020159.98537
+when: 1495045957.0771
 asMultiple: FALSE
 asStatic: FALSE

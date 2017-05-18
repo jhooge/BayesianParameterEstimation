@@ -16,11 +16,10 @@ shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(
       h3("Data Parameters"),
-      sliderInput("n",
-                  "Number of samples:",
-                  min = 1,
-                  max = 1000,
-                  value = 100),
+      numericInput("n", "Number of samples:", min = 1, max = 1000, value = 10),
+      actionButton("add", "Add"),
+      actionButton("remove", "Remove"),
+      actionButton("reset", "Reset"),
       sliderInput("prob",
                   "Success Probability:",
                   min = 0,
