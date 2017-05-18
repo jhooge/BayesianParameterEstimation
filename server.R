@@ -41,7 +41,6 @@ shinyServer(function(input, output) {
   })
   
   output$triPlot <- renderPlot({
-    
     validate(
       need(!(length(values$x)==0), "Please start drawing samples using the 'Add' button!")
     )
@@ -83,7 +82,12 @@ shinyServer(function(input, output) {
             legend.text  = element_text(size=15))
   })
   
+  
   output$pointEst_Prior <- renderTable({
+    validate(
+      need(!(length(values$x)==0), NULL)
+    )
+    
     alpha <- input$alpha
     beta  <- input$beta
     
@@ -97,6 +101,10 @@ shinyServer(function(input, output) {
   })
   
   output$pointEst_Likelihood <- renderTable({
+    validate(
+      need(!(length(values$x)==0), NULL)
+    )
+    
     x <- sum(values$x) ## number of successes
     n <- length(values$x) ## number of tries
     alpha <- x + 1
@@ -107,11 +115,15 @@ shinyServer(function(input, output) {
     beta_std  <- betaStd(alpha, beta)
     
     pE <- data.frame(Type=c("Mode", "Mean", "Std"), 
-                     PointEstimate=c(beta_mode, beta_mean, beta_std))
+                                   PointEstimate=c(beta_mode, beta_mean, beta_std))
     return(pE)
   })
   
   output$pointEst_Posterior <- renderTable({
+    validate(
+      need(!(length(values$x)==0), NULL)
+    )
+    
     x <- sum(values$x) ## number of successes
     n <- length(values$x) ## number of tries
     alpha <- input$alpha + 1
