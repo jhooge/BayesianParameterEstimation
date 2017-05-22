@@ -132,14 +132,23 @@ shinyServer(function(input, output) {
     ## Data
     x <- sum(values$x) ## number of successes
     
+    norm <- 
+    
     ## Likelihood p(x|theta) with x ~ Bin(theta, alpha, beta)
     likelihood <- dbinom(x, n, theta)
+    likelihood <- likelihood/sum(likelihood)
     
     ## Prior p(theta) based on Beta(theta, alpha, beta)
     prior <- dbeta(theta, alpha, beta)
+    prior <- prior/sum(prior)
     
     ## Posterior Distribution p(theta|x)
     posterior <- dbeta(theta, alpha+x, beta+n-x)
+    posterior <- posterior/sum(posterior)
+    
+    print(sprintf("Prior Density: %.5f", prior))
+    print(sprintf("Likelihood Density: %.5f", likelihood))
+    print(sprintf("Posterior Density: %.5f", posterior))
     
     data <- data.frame(Theta=theta, Posterior=posterior, Prior=prior, Likelihood=likelihood)
     data.molten <- melt(data, id.vars = "Theta")
@@ -149,7 +158,6 @@ shinyServer(function(input, output) {
       geom_line(aes(colour=Function, linetype=Function), size=1.5) +
       geom_text(x = Inf, y = Inf, label = paste0("n=", n), hjust = 1.2, vjust = 1.2, size=10) + 
       xlab(expression(theta)) +
-      scale_y_continuous(limits = c(0, 30)) +
       scale_x_continuous(breaks = seq(0, 1.1, by=.1)) +
       theme_bw() +
       theme(plot.title   = element_text(size=15),
@@ -160,7 +168,6 @@ shinyServer(function(input, output) {
             legend.title = element_blank(),
             legend.text  = element_text(size=15))
   })
-  
   
   output$pointEst_Prior <- renderTable({
     validate(
